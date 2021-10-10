@@ -18,6 +18,7 @@ call方法有的需要deposit, 但都需要gas费
 
 
 一个最基础的例子可参考以下：
+```
 async function connect(nearConfig) {
   // Connects to NEAR and provides `near`, `walletAccount` and `contract` objects in `window` scope
   // Initializing connection to the NEAR node.
@@ -42,7 +43,15 @@ async function connect(nearConfig) {
     sender: window.walletConnection.getAccountId()
   });
 }
+```
 
-此时我如果调用get_num则为： let res = await window.contract.get_num()
-调用increment let res = await window.contract.increament({..args}, 300000000000000, "1000000000000000000000000")
+此时我如果调用get_num则为： 
+```
+let res = await window.contract.get_num()
+```
+
+调用increment 
+```
+let res = await window.contract.increament({..args}, 300000000000000, "1000000000000000000000000")
+```
 
