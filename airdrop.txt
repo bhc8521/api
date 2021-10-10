@@ -1,4 +1,4 @@
-airdrop合约:
+airdrop合约:  //合约地址待定
 (1) view 方法
 get_token_list    //获取合约已注册的token
 return [{

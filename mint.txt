@@ -1,4 +1,4 @@
-mint合约：
+mint合约：  //合约地址待定
 (1) view 方法：
 get_tokens()  // 获取所有mint过的合约
 return [String]  //token合约地址
