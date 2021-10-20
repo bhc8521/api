@@ -1,0 +1,39 @@
+mint合约：  //合约地址待定
+(1) view 方法：
+get_tokens()  // 获取所有mint过的合约
+return [String]  //token合约地址
+
+get_creator_tokens(creator: String)  //获取某个creator的token
+return [String]
+
+get_token_type(token_type: String)   //获取代码模板信息
+return {
+    hash: String,               //代码哈希
+    length: u32,                //代码长度
+    storage_deposit: U128       //部署代码所需near余额
+}
+
+(2) call 方法：
+deploy_token(                  //铸造token
+    token_type: String    //代码模板名称 目前只有"normal"
+    name: String      //token全称
+    args: JSON.stringify({
+        owner_id: String      //部署代码的账户名
+        name: String          //token全称
+        symbol: String        //token简称
+        icon: Option<String>,    //token的logo,可省略   exmaple: data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 288 288'%3E%3Cg id='l' data-name='l'%3E%3Cpath d='M187.58,79.
+        total_supply: U128   //总供应量，字符串
+    })
+    
+)
+deposit = storage_cost() * bytes     //待定
+gas = 300000000000000
+return null
+
+deploy_facility(
+    facility_type: String,
+    token_id: String,
+    args: JSON.stringify({
+        //按照具体代码模板来定
+    })
+)

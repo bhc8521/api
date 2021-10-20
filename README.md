@@ -3,6 +3,9 @@ API
 规范：
 所有与链上交互的动作都需要near-api-js
 
+token转账或查询余额之类的东西应直接调用此token的合约地址上的方法
+参考文档：https://github.com/near/near-sdk-rs/tree/master/near-contract-standards/src/fungible_token
+
 与token或者near相关的数量都应乘以decimal
 比如1个near的表示方法为 1000000000000000000000000, 他的decimal为24，24个0，用字符串表示
 其他token的decimal可能不是24
