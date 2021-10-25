@@ -2,6 +2,7 @@ API
 
 规范：
 所有与链上交互的动作都需要near-api-js
+所有测试都使用NEAR测试网
 
 token转账或查询余额之类的东西应直接调用此token的合约地址上的方法
 参考文档：https://github.com/near/near-sdk-rs/tree/master/near-contract-standards/src/fungible_token

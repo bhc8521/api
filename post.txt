@@ -1,0 +1,134 @@
+登录使用near-api-js的login
+example:
+
+export function logout() {
+  window.walletConnection.signOut()
+  // reload page
+  window.location.replace(window.location.origin + window.location.pathname)
+}
+
+export function login() {
+  // Allow the current app to make calls to the specified contract on the
+  // user's behalf.
+  // This works by creating a new access key for the user's account and storing
+  // the private key in localStorage.
+  window.walletConnection.requestSignIn(nearConfig.contractName)
+
+near登录后需向中心化服务器发送account_id, signature, publick_key
+signature获取方法如下：
+
+const keyStore = new nearAPI.keyStores.BrowserLocalStorageKeyStore()
+const keyPair = await keyStore.getKey(config.networkId, <ACCOUNT_ID>);
+const msg = Buffer.from(<ACCOUNT_ID>);
+const { signature } = keyPair.sign(msg);
+const publick_key = keyPair.publick_key
+
+测试用服务器：8.131.250.55:8888
+
+1./api/login  POST  //此方法不需要token
+{
+  account_id: String,
+  signature: String,
+  publick_key: String
+}
+return
+{
+  success: boolean,
+  token: String       //验证登录用token, request header格式为 { 'Authorization': 'token xxx' }
+}
+
+2./api/get_recommend_posts GET  //首页推荐的6个items
+return
+{
+  success: boolean,
+  data: [{
+    text: String,
+    account_id: String,
+    imgs: [String],
+    is_public: Boolean,
+    token_id: String,
+    amount_to_access: Number,
+    create_time: Date
+  }]
+}
+
+
+3.get_explore_posts  POST    //explore页面的瀑布流
+{
+  page: Number,
+  limit: Number,
+}
+return
+{
+  success: boolean,
+  data: [{
+    text: String,
+    account_id: String,
+    imgs: [String],
+    is_public: Boolean,
+    token_id: String,
+    amount_to_access: Number,
+    create_time: Date
+  }]
+}
+
+4./api/get_user_posts   POST     //个人页瀑布流
+{
+  account_id: String,     //要查询的账号
+  page: Number,
+  limit: Number,
+}
+return
+{
+  success: boolean,
+  data: [{
+    text: String,
+    account_id: String,
+    imgs: [String],
+    is_public: Boolean,
+    token_id: String,
+    amount_to_access: Number,
+    create_time: Date
+  }]
+}
+
+5./api/new_post    POST    //往帖子里发评论
+{
+  text: String,
+  account_id: String,
+  imgs: [String],
+  is_public: Boolean,
+  token_id: String,
+  amount_to_access: Number,
+}
+return
+{
+  success: boolean
+}
+
+6./api/new_comment    POST    //往帖子里发评论
+{
+  post_id: String,     //对应的帖子_id  (mongodb里的默认id)
+  text: String,
+}
+return
+{
+  success: boolean
+}
+
+7./api/get_comments   POST    //获取帖子中的评论
+{
+  post_id: String,
+  page: Number,
+  limit: Number
+}
+return
+{
+  success::boolean,
+  data: [{
+      post_id: String,
+      text: String,
+      account_id: String,
+      create_time: Date
+  }]
+}
