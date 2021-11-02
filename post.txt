@@ -22,10 +22,15 @@ const keyPair = await keyStore.getKey(config.networkId, <ACCOUNT_ID>);
 const msg = Buffer.from(<ACCOUNT_ID>);
 const { signature } = keyPair.sign(msg);
 const publick_key = keyPair.publick_key
+let msg = {
+  account_id: "bhc8521.testnet",
+  signature: Array.from(signature),
+  public_key: Array.from(public_key)
+}
 
 测试用服务器：8.131.250.55:8888
 
-1./api/login  POST  //此方法不需要token
+1./api/login  POST  //登录
 {
   account_id: String,
   signature: String,
@@ -92,7 +97,7 @@ return
   }]
 }
 
-5./api/new_post    POST    //往帖子里发评论
+5./api/new_post    POST    //往帖子里发评论 需要登录token
 {
   text: String,
   account_id: String,
@@ -106,7 +111,7 @@ return
   success: boolean
 }
 
-6./api/new_comment    POST    //往帖子里发评论
+6./api/new_comment    POST    //往帖子里发评论 需要登录token
 {
   post_id: String,     //对应的帖子_id  (mongodb里的默认id)
   text: String,
@@ -131,4 +136,71 @@ return
       account_id: String,
       create_time: Date
   }]
+}
+
+8./api/get_user_profile   POST  //获取个人信息
+{
+  account_id: String   //如果是查看自己则空
+}
+return
+{
+  success: true,
+  data: {
+    account_id: String,
+    bio: String,
+    avatar: String,
+    background: String,
+    media: [{
+      name: String,
+      url: String,
+    }],
+    following: Number,     //正在关注人数
+    followers: Number      //被关注人数
+
+    email: String   //如果查看的是自己则返回
+  }
+}
+
+9./api/edit_user_profile   POST   //改个人信息 需要登录token
+{
+  bio: String,
+  avatar: String,
+  background: String,
+  email: String,
+  media: [{
+    name: String,
+    url: String,
+  }]
+}
+return
+{
+  success: boolean,
+}
+
+10.check_follow    POST    //查看是否follow这个人 需要登录token
+{
+  account_id: String
+}
+return
+{
+  success: boolean,
+  data: boolean
+}
+
+11.follow     POST   //关注 需要登录token
+{
+  account_id: String
+}
+return
+{
+  success: boolean,
+}
+
+12.unfollow    POST   //取消关注 需要登录token
+{
+  account_id: String
+}
+return
+{
+  success: boolean
 }
