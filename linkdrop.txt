@@ -1,21 +1,12 @@
 airdrop合约:  //合约地址待定
 (1) view 方法
 get_token_list    //获取合约已注册的token
-return [{
-    spec: String,         //不重要
-    name: String,        // token名字
-    symbol: String,     // 简写
-    icon: Option<String>,  //option可能为Null
-    reference: Option<String>,           //不重要
-    reference_hash: Option<Base64VecU8>,//不重要
-    decimals: u8,    //最小单位
-}]
+return
+[String]      //币的账户地址
 
-get_creator_token_list(creator: String)   //获取creator已注册的token
-return [{
-    symbol: String,
-    token_id: String    //token的合约地址
-}]
+get_creator_token_list(creator: String)   //获取creator已有的token
+return 
+[String]      //币的账户地址
 
 get_creator_tasks(creator: String)  //获取creator创建的所有airdrop tasks
 return [{
@@ -27,6 +18,20 @@ return [{
     token_decimal: u8,   //最小单位
     claimed_count: u32,  //已领取数量
 }]
+
+get_creator_tasks_by_public_keys(creator: String, public_keys: [String])  //批量获取空投状态
+return [{
+    total_count: u32,     //这个task对应的红包数量
+    start_time: U64,     //空投开始时间，大写U返回字符串
+    end_time: U64,       //空投结束时间
+    token_amount: U128,  //空投token量， 需要除以decimal
+    token_symbol: String, //token简写
+    token_decimal: u8,   //最小单位
+    claimed_count: u32,  //已领取数量
+}]
+
+get_task_estimate_cost(total_count: Number)  //预估add_task所需deposit
+return U128
 
 get_creator_balance(    //获取creator的token或者near的余额
     creator: String,   // 要查询的creator
@@ -57,12 +62,12 @@ return null
 add_task(                     //creator创建空投任务
     total_count: u32,           // 一共有多少个用户能获取空投
     amount_per_account: U128,   // 每个user能获取的空投数量
-    deadline: U64
+    start_time: U64,
+    end_time: U64,
     token_id: String,        // token的合约地址
-    private_key: String,        // 由前端创建的私钥，用near-seed-phrase的github库
-    public_key: Vec<u8>       // 由私钥生成的公钥， 也是用near-seed-phrase, 是一个32个byte的数组，最后提交前需要在第一个位置添加一个0变成33个byte
+    public_key: String      // 由前端创建的一对私钥和公钥，用near-seed-phrase的github库 由私钥生成的公钥
     )
-deposit = 30000000000000000000000 * total_count
+deposit = 由get_task_estimate_cost获取
 gas =     300000000000000
 return null
 

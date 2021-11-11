@@ -1,0 +1,36 @@
+facility合约：  测试网地址  facility.bhc8521.testnet
+(1) view 方法：
+get_creator_facilities(creator: String)  // 获取所有deploy过的facility
+return [String]  //token合约地址
+
+get_facility_info(facility_id)  //获取某个facility的信息
+return {
+  facility_type: String,
+  owner_id: String
+}
+
+get_facility_code_info(token_type: String)   //获取代码模板信息
+return {
+    hash: String,               //代码哈希
+    length: u32,                //代码长度
+    storage_deposit: U128       //部署代码所需near余额
+}
+
+get_facility_storage_cost(token_type: String)  //获取代码储存费用
+return U128
+
+get_facility_code_types() //获取所有token_types
+return [String]
+
+
+(2) call 方法：
+deploy_facility(                  //部署合约
+    facility_type: String    //代码模板名称 目前只有"lockup"
+    args: JSON.stringify({
+        owner_id: String
+    })
+    
+)
+deposit = 由get_facility_storage_cost获得
+gas = 300000000000000
+return null

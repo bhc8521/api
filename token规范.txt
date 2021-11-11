@@ -1,3 +1,12 @@
 用于各类token的通用标准接口：
 (1) view方法：
 
+return [{
+    spec: String,         //不重要
+    name: String,        // token名字
+    symbol: String,     // 简写
+    icon: Option<String>,  //option可能为Null
+    reference: Option<String>,           //不重要
+    reference_hash: Option<Base64VecU8>,//不重要
+    decimals: u8,    //最小单位
+}]

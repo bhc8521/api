@@ -6,12 +6,25 @@ return [String]  //token合约地址
 get_creator_tokens(creator: String)  //获取某个creator的token
 return [String]
 
-get_token_type(token_type: String)   //获取代码模板信息
+get_token_info(token_id: String)   //获取某token的信息
+return {
+    owner_id: String,              //是谁的token
+    from_extra: boolean,           //是否是导入的token
+}
+
+get_token_code_info(token_type: String)   //获取代码模板信息
 return {
     hash: String,               //代码哈希
     length: u32,                //代码长度
     storage_deposit: U128       //部署代码所需near余额
 }
+
+get_token_storage_cost(token_type: String)  //获取代码储存费用
+return U128
+
+get_token_code_types() //获取所有token_types
+return [String]
+
 
 (2) call 方法：
 deploy_token(                  //铸造token
@@ -26,14 +39,10 @@ deploy_token(                  //铸造token
     })
     
 )
-deposit = storage_cost() * bytes     //待定
+deposit = 由get_token_storage_cost获得
 gas = 300000000000000
 return null
 
-deploy_facility(
-    facility_type: String,
-    token_id: String,
-    args: JSON.stringify({
-        //按照具体代码模板来定
-    })
-)
+
+add_extra_token(token_id: String)    //导入外部token
+return null

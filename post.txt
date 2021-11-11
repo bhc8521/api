@@ -30,6 +30,8 @@ let msg = {
 
 测试用服务器：8.131.250.55:8888
 
+
+====================================================================== 帖子相关 ===========================================================================
 1./api/login  POST  //登录
 {
   account_id: String,
@@ -47,13 +49,15 @@ return
 {
   success: boolean,
   data: [{
-    text: String,
     account_id: String,
-    imgs: [String],
-    is_public: Boolean,
-    token_id: String,
-    amount_to_access: Number,
-    create_time: Date
+    create_time: Date,   //正常的date
+    args: {
+        text: String,
+        imgs: [String],
+        is_public: Boolean,
+        token_id: String,
+        amount_to_access: Number,
+    }
   }]
 }
 
@@ -67,13 +71,15 @@ return
 {
   success: boolean,
   data: [{
-    text: String,
     account_id: String,
-    imgs: [String],
-    is_public: Boolean,
-    token_id: String,
-    amount_to_access: Number,
-    create_time: Date
+    create_time: Date,   //正常的date
+    args: {
+        text: String,
+        imgs: [String],
+        is_public: Boolean,
+        token_id: String,
+        amount_to_access: Number,
+    }
   }]
 }
 
@@ -87,17 +93,19 @@ return
 {
   success: boolean,
   data: [{
-    text: String,
     account_id: String,
-    imgs: [String],
-    is_public: Boolean,
-    token_id: String,
-    amount_to_access: Number,
-    create_time: Date
+    create_time: Date,   //正常的date
+    args: {
+        text: String,
+        imgs: [String],
+        is_public: Boolean,
+        token_id: String,
+        amount_to_access: Number,
+    }
   }]
 }
 
-5./api/new_post    POST    //往帖子里发评论 需要登录token
+5./api/new_post    POST    //发帖 需要登录token
 {
   text: String,
   account_id: String,
@@ -138,6 +146,10 @@ return
   }]
 }
 
+
+
+====================================================================== 个人资料相关 ===========================================================================
+
 8./api/get_user_profile   POST  //获取个人信息
 {
   account_id: String   //如果是查看自己则空
@@ -177,7 +189,7 @@ return
   success: boolean,
 }
 
-10.check_follow    POST    //查看是否follow这个人 需要登录token
+10./api/check_follow    POST    //查看是否follow这个人 需要登录token
 {
   account_id: String
 }
@@ -187,7 +199,7 @@ return
   data: boolean
 }
 
-11.follow     POST   //关注 需要登录token
+11./api/follow     POST   //关注 需要登录token
 {
   account_id: String
 }
@@ -196,11 +208,67 @@ return
   success: boolean,
 }
 
-12.unfollow    POST   //取消关注 需要登录token
+12./api/unfollow    POST   //取消关注 需要登录token
 {
   account_id: String
 }
 return
 {
   success: boolean
+}
+
+
+====================================================================== 索引接口相关 ===========================================================================
+
+13./api/get_token_holder_count      POST   //获取这些币的持有人数
+{
+  token_ids: [String]     //币的账户地址
+}
+return
+{
+  success: boolean,
+  data: [
+    {
+      count: Number
+    }
+  ]
+}
+
+14./api/get_explore_linkdrop     POST   //获取首页瀑布流的linkdrop
+{
+  offset_timestamp: Number    //毫秒
+  limit: Number
+}
+return
+{
+  account_id: String,         //空投发起人
+  create_time: String,        //纳秒
+  args: {
+      total_count: u32,        //空投总地址数量
+      amount_per_account: U128,    //每个空投的量
+      start_time: U64,         //开始时间  纳秒
+      end_time: U64,           //结束时间  纳秒
+      token_id: AccountId,       //币的账户地址
+      public_key: Base58PublicKey    //空投key
+  }
+}
+
+14./api/get_user_linkdrop     POST   //获取首页瀑布流的linkdrop
+{
+  account_id: String          //如果为空则为自己并需要登录token
+  offset_timestamp: Number    //毫秒
+  limit: Number
+}
+return
+{
+  account_id: String,         //空投发起人
+  create_time: String,        //纳秒
+  args: {
+      total_count: u32,        //空投总地址数量
+      amount_per_account: U128,    //每个空投的量
+      start_time: U64,         //开始时间  纳秒
+      end_time: U64,           //结束时间  纳秒
+      token_id: AccountId,       //币的账户地址
+      public_key: Base58PublicKey    //空投key
+  }
 }
