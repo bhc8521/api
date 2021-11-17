@@ -14,37 +14,46 @@ export function login() {
   // the private key in localStorage.
   window.walletConnection.requestSignIn(nearConfig.contractName)
 
-near登录后需向中心化服务器发送account_id, signature, publick_key
-signature获取方法如下：
+near登录后不需要向服务器发送登录消息，每次跟身份相关的消息都需要signature
+signature获取方法如下, 以/api/edit_my_profile举例：
 
 const keyStore = new nearAPI.keyStores.BrowserLocalStorageKeyStore()
-const keyPair = await keyStore.getKey(config.networkId, <ACCOUNT_ID>);
-const msg = Buffer.from(<ACCOUNT_ID>);
-const { signature } = keyPair.sign(msg);
-const publick_key = keyPair.publick_key
-let msg = {
-  account_id: "bhc8521.testnet",
-  signature: Array.from(signature),
-  public_key: Array.from(public_key)
+const keyPair = await keyStore.getKey(config.networkId, "<ACCOUNT_ID>");
+let args = {
+  bio: "im so good",
+  avatar: "",
+  background: "",
+  email: "bai_haochen@163.com",
+  media: []
 }
+let data = {
+  method_name: "edit_user_profile",
+  me: "<ACCOUNT_ID>",
+  timestamp: new Date().getTime(),
+  args: args
+}
+const data_buffer = Buffer.from(JSON.stringify(data));
+const { signature } = keyPair.sign(data_buffer);
+let sign = bs58.encode(signature)
+let msg = {
+  data: data,
+  signature: sign,
+}
+console.log(msg)
+
+//验证
+const public_key = keyPair.publicKey.data
+const decode_sign = bs58.decode(sign)
+let valid = tweetnacl.sign.detached.verify(new Uint8Array(data_buffer), new Uint8Array(decode_sign), public_key);
+console.log(valid)
 
 测试用服务器：8.131.250.55:8888
 
 
 ====================================================================== 帖子相关 ===========================================================================
-1./api/login  POST  //登录
-{
-  account_id: String,
-  signature: String,
-  publick_key: String
-}
-return
-{
-  success: boolean,
-  token: String       //验证登录用token, request header格式为 { 'Authorization': 'token xxx' }
-}
 
-2./api/get_recommend_posts GET  //首页推荐的6个items
+
+2./api/get_recommend_posts POST  //首页推荐的6个items
 return
 {
   success: boolean,
@@ -62,9 +71,9 @@ return
 }
 
 
-3.get_explore_posts  POST    //explore页面的瀑布流
+3.get_explore_posts  POST    //explore页面的帖子
 {
-  page: Number,
+  offset_timestamp： Number,
   limit: Number,
 }
 return
@@ -83,10 +92,10 @@ return
   }]
 }
 
-4./api/get_user_posts   POST     //个人页瀑布流
+4./api/get_user_posts   POST     //别人主页帖子
 {
   account_id: String,     //要查询的账号
-  page: Number,
+  offset_timestamp： Number,
   limit: Number,
 }
 return
@@ -105,7 +114,28 @@ return
   }]
 }
 
-5./api/new_post    POST    //发帖 需要登录token
+4./api/get_my_posts   POST     //自己主页帖子
+{
+  offset_timestamp： Number,
+  limit: Number,
+}
+return
+{
+  success: boolean,
+  data: [{
+    account_id: String,
+    create_time: Date,   //正常的date
+    args: {
+        text: String,
+        imgs: [String],
+        is_public: Boolean,
+        token_id: String,
+        amount_to_access: Number,
+    }
+  }]
+}
+
+5./api/new_post    POST    //发帖 
 {
   text: String,
   account_id: String,
@@ -119,7 +149,7 @@ return
   success: boolean
 }
 
-6./api/new_comment    POST    //往帖子里发评论 需要登录token
+6./api/new_comment    POST    //往帖子里发评论 
 {
   post_id: String,     //对应的帖子_id  (mongodb里的默认id)
   text: String,
@@ -150,9 +180,31 @@ return
 
 ====================================================================== 个人资料相关 ===========================================================================
 
-8./api/get_user_profile   POST  //获取个人信息
+8./api/get_user_profile   POST  //获取别人信息
 {
-  account_id: String   //如果是查看自己则空
+  account_id: String   
+}
+return
+{
+  success: true,
+  data: {
+    account_id: String,
+    bio: String,
+    avatar: String,
+    background: String,
+    media: [{
+      name: String,
+      url: String,
+    }],
+    following: Number,     //正在关注人数
+    followers: Number      //被关注人数
+    
+  }
+}
+
+8./api/get_my_profile   POST  //获取自己的信息
+{
+ 
 }
 return
 {
@@ -169,11 +221,11 @@ return
     following: Number,     //正在关注人数
     followers: Number      //被关注人数
 
-    email: String   //如果查看的是自己则返回
+    email: String  
   }
 }
 
-9./api/edit_user_profile   POST   //改个人信息 需要登录token
+9./api/edit_user_profile   POST   //改自己信息 
 {
   bio: String,
   avatar: String,
@@ -189,7 +241,7 @@ return
   success: boolean,
 }
 
-10./api/check_follow    POST    //查看是否follow这个人 需要登录token
+10./api/check_follow    POST    //查看是否follow这个人 
 {
   account_id: String
 }
@@ -199,7 +251,7 @@ return
   data: boolean
 }
 
-11./api/follow     POST   //关注 需要登录token
+11./api/follow     POST   //关注 
 {
   account_id: String
 }
@@ -208,7 +260,7 @@ return
   success: boolean,
 }
 
-12./api/unfollow    POST   //取消关注 需要登录token
+12./api/unfollow    POST   //取消关注 
 {
   account_id: String
 }
@@ -220,7 +272,7 @@ return
 
 ====================================================================== 索引接口相关 ===========================================================================
 
-13./api/get_token_holder_count      POST   //获取这些币的持有人数
+13./api/get_token_holder_count      GET   //获取这些币的持有人数
 {
   token_ids: [String]     //币的账户地址
 }
@@ -234,7 +286,7 @@ return
   ]
 }
 
-14./api/get_explore_linkdrop     POST   //获取首页瀑布流的linkdrop
+14./api/get_explore_linkdrop     GET   //获取首页瀑布流的linkdrop
 {
   offset_timestamp: Number    //毫秒
   limit: Number
@@ -253,9 +305,9 @@ return
   }
 }
 
-14./api/get_user_linkdrop     POST   //获取首页瀑布流的linkdrop
+14./api/get_user_linkdrop     GET   //获取首页瀑布流的linkdrop
 {
-  account_id: String          //如果为空则为自己并需要登录token
+  account_id: String        
   offset_timestamp: Number    //毫秒
   limit: Number
 }
