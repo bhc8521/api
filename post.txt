@@ -41,6 +41,19 @@ let msg = {
 }
 console.log(msg)
 
+一个完整的msg结构为:
+{
+  data: {
+    method_name: ""
+    timestamp: 123123123,    //毫秒
+    me: "<ACCOUNT_ID>",   //获取post类的接口此字段为null
+    args {
+
+    }
+  }
+  signature: xxx    //获取post类的接口此字段为null
+}
+
 //验证
 const public_key = keyPair.publicKey.data
 const decode_sign = bs58.decode(sign)
