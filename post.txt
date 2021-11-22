@@ -60,7 +60,7 @@ const decode_sign = bs58.decode(sign)
 let valid = tweetnacl.sign.detached.verify(new Uint8Array(data_buffer), new Uint8Array(decode_sign), public_key);
 console.log(valid)
 
-测试用服务器：8.131.250.55:8888
+测试用服务器：59.110.213.236:8888
 
 
 ====================================================================== 帖子相关 ===========================================================================
