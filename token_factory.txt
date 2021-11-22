@@ -1,4 +1,4 @@
-mint合约：  //合约地址待定
+mint合约：  token.bhc8521.testnet   正式上线后为token.27s.near
 (1) view 方法：
 get_tokens()  // 获取所有mint过的合约
 return [String]  //token合约地址

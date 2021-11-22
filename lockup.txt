@@ -1,0 +1,30 @@
+lockup合约：  <account id>.facility.bhc8521.testnet   正式上线后为<account id>.facility.27s.near
+(1) view 方法：
+get_tasks(sender: AccountId)
+return [{
+    index: i as u32,
+    should_claim: get_claim_amount(task, &v),
+    amount_left: v.amount_left.into(),
+    claim_time: v.claim_time.into(),
+    token_id: task.token_id.clone(),
+    start_time: task.start_time.into(),
+    end_time: task.end_time.into(),
+    vesting_period: task.vesting_period.into(),
+}]
+
+(2) call 方法：
+add_task(
+    token_id: AccountId, 
+    account_list: Vec<AccountId>, 
+    start_time: U64, 
+    end_time: U64, 
+    vesting_period: U64, 
+    amount: U128
+)
+return null
+
+claim(
+    token_id: AccountId, 
+    task_index: u32
+)
+return null

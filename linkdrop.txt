@@ -66,6 +66,8 @@ add_task(                     //creator创建空投任务
     end_time: U64,
     token_id: String,        // token的合约地址
     public_key: String      // 由前端创建的一对私钥和公钥，用near-seed-phrase的github库 由私钥生成的公钥
+    imgs:[String],
+    text: String
     )
 deposit = 由get_task_estimate_cost获取
 gas =     300000000000000

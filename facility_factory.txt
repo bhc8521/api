@@ -1,4 +1,4 @@
-facility合约：  测试网地址  facility.bhc8521.testnet
+facility合约：  测试网地址  facility.bhc8521.testnet  正式上线后为facility.27s.near
 (1) view 方法：
 get_creator_facilities(creator: String)  // 获取所有deploy过的facility
 return [String]  //token合约地址
