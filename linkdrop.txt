@@ -1,34 +1,13 @@
 airdrop合约:  //合约地址待定
 (1) view 方法
-get_token_list    //获取合约已注册的token
-return
-[String]      //币的账户地址
 
 get_creator_token_list(creator: String)   //获取creator已有的token
 return 
 [String]      //币的账户地址
 
-get_creator_tasks(creator: String)  //获取creator创建的所有airdrop tasks
-return [{
-    total_count: u32,     //这个task对应的红包数量
-    start_time: U64,     //空投开始时间，大写U返回字符串
-    end_time: U64,       //空投结束时间
-    token_amount: U128,  //空投token量， 需要除以decimal
-    token_symbol: String, //token简写
-    token_decimal: u8,   //最小单位
-    claimed_count: u32,  //已领取数量
-}]
 
-get_creator_tasks_by_public_keys(creator: String, public_keys: [String])  //批量获取空投状态
-return [{
-    total_count: u32,     //这个task对应的红包数量
-    start_time: U64,     //空投开始时间，大写U返回字符串
-    end_time: U64,       //空投结束时间
-    token_amount: U128,  //空投token量， 需要除以decimal
-    token_symbol: String, //token简写
-    token_decimal: u8,   //最小单位
-    claimed_count: u32,  //已领取数量
-}]
+get_creator_tasks(creator: String, public_keys: [String])  //批量获取空投状态
+return [u32]
 
 get_task_estimate_cost(total_count: Number)  //预估add_task所需deposit
 return U128
@@ -38,15 +17,6 @@ get_creator_balance(    //获取creator的token或者near的余额
     token_id: Option<String>   //如果要查的是near则不填，查某种token需要此字段
     )
 return u128
-
-get_claim_info(       //当user要领取空投时先获取这些信息
-    creator: String, 
-    index:u32         // 空投id
-    )
-return {
-    nonce: U64,       // sign transaction所需的nonce, 大写U意思是返回的为字符串
-    private_key: String   //sign transaction所需的私钥
-}
 
 (2) call方法
 add_creator_token(token_id: String)     // 当合约没有creator的token时调用此方法
