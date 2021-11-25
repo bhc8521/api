@@ -299,8 +299,9 @@ return
   ]
 }
 
-14./api/get_explore_linkdrop     GET   //获取首页瀑布流的linkdrop
+14./api/get_explore_items     GET   //获取首页瀑布流的linkdrop
 {
+  contract_ids: [String]       //合约地址数组
   offset_timestamp: Number    //毫秒
   limit: Number
 }
@@ -308,18 +309,14 @@ return
 {
   account_id: String,         //空投发起人
   create_time: String,        //纳秒
-  args: {
-      total_count: u32,        //空投总地址数量
-      amount_per_account: U128,    //每个空投的量
-      start_time: U64,         //开始时间  纳秒
-      end_time: U64,           //结束时间  纳秒
-      token_id: AccountId,       //币的账户地址
-      public_key: Base58PublicKey    //空投key
+  args: {   
+    看下面例子
   }
 }
 
-14./api/get_user_linkdrop     GET   //获取首页瀑布流的linkdrop
+14./api/get_user_items     GET   //获取首页瀑布流的linkdrop
 {
+  contract_ids: [String]       //合约地址数组
   account_id: String        
   offset_timestamp: Number    //毫秒
   limit: Number
@@ -329,11 +326,56 @@ return
   account_id: String,         //空投发起人
   create_time: String,        //纳秒
   args: {
-      total_count: u32,        //空投总地址数量
-      amount_per_account: U128,    //每个空投的量
-      start_time: U64,         //开始时间  纳秒
-      end_time: U64,           //结束时间  纳秒
-      token_id: AccountId,       //币的账户地址
-      public_key: Base58PublicKey    //空投key
+    看下面例子
   }
+}
+
+
+linkdrop返回args举例
+{
+  total_count: u32,        //空投总地址数量
+  amount_per_account: U128,    //每个空投的量
+  start_time: U64,         //开始时间  纳秒
+  end_time: U64,           //结束时间  纳秒
+  token_id: AccountId,       //币的账户地址
+  public_key: Base58PublicKey    //空投key
+  imgs: [String]   //图片
+  text: String     //描述信息
+}
+
+bounty返回args举例
+{
+  total_count: u32,       //一共要奖励多少人
+  amount_per_share: U128,   //每份奖励
+  end_time: U64,         //结束时间
+  token_id: AccountId,    //token合约账户地址
+  url: String,           //分享的url
+  account_list: Vec<AccountId>,   //推荐人白名单
+  is_white_list: bool,     //是否是白名单模式
+  ratio: u32,            //分配比例
+  public_key: Base58PublicKey  //链上查询用hash
+}
+
+lockup返回args举例
+{
+  token_id: AccountId, 
+  account_list: Vec<AccountId>,  //领取人白名单
+  start_time: U64, 
+  end_time: U64, 
+  vesting_period: U64,    //解锁token周期
+  amount: U128,         //总量
+  hash: Base58CryptoHash   //链上查询用hash
+}
+
+mint返回args举例
+{
+  token_type: String,  //目前默认只有normal
+  name: String,    //token的全称
+  args: String  //被序列化的参数，里面包含token的简称还有logo(base64的logo字符串)
+}
+
+facility返回args举例
+{
+  facility_type: String,  //目前只有lockup
+  args:String  //被序列化的参数
 }
