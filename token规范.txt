@@ -12,5 +12,5 @@ return {
     decimals: u8,    //最小单位
 }
 
-ft_balance_of()
+ft_balance_of(account_id: String)
 return  U128

@@ -1,5 +1,9 @@
 lockup合约：  lockup-<account id>.facility.bhc8521.testnet   正式上线后为lockup-<account id>.facility.27s.near
 (1) view 方法：
+get_token_list()   //获取creator已有的token
+return 
+[String]      //币的账户地址
+
 get_unclaimed_amounts(sender: AccountId, public_keys: [String])
 return [{
     should_claim: get_claim_amount(task, &v),

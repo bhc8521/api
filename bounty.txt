@@ -1,4 +1,4 @@
-airdrop合约:  //linkdrop.bhc8521.testnet
+bounty合约:  //bounty.bhc8521.testnet
 (1) view 方法
 
 get_creator_token_list(creator: String)   //获取creator已有的token
@@ -19,7 +19,7 @@ get_creator_balance(    //获取creator的token或者near的余额
 return u128
 
 (2) call方法
-add_creator_token(token_id: String)     // 当合约没有creator的token时调用此方法
+add_token(token_id: String)     // 当合约没有creator的token时调用此方法
 deposit = 0.0125 * 10^24                       // 转账数额，用于注册token
 gas = 300000000000000
 return null
