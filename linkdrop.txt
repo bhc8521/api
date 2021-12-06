@@ -43,13 +43,29 @@ deposit = 由get_task_estimate_cost获取
 gas =     300000000000000
 return null
 
+preclaim(
+    creator: String, 
+    public_key: String,   
+    receiver: String
+)
+deposit = 0
+gas = 150000000000000
+return null
+
 claim(                     // user获取空投
     creator: String,      // 指定是哪个creator创建的空投
-    index: u32,              // 指定空投的index
+    public_key: String            
     receiver: String      // 空投领取人
     )
 deposit = 0
-gas = 300000000000000
+gas = 150000000000000
 return null
-调用claim方法时，需要用之前get_claim_info所获取的信息创建一个新的near wallet context, 钱包地址使用此合约地址，
-然后添加private_key和nonce才能领取
+
+
+//通过以下方法获得claim的public key
+let hash = js_sha256.sha256(entrophy)
+return generateSeedPhrase(hash)
+
+
+//preclaim和claim使用连续签名方法，以此合约账户为交易发起人，参考以下代码
+https://github.com/27s-io/Linkdrop/blob/master/src/claimer.js
